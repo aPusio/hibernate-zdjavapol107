@@ -1,40 +1,37 @@
-package org.example.dao;
+package org.example.dao.old;
 
+import lombok.AllArgsConstructor;
+import org.example.model.Author;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.util.Optional;
 
-public abstract class EntityDao <T>{
+@AllArgsConstructor
+public class OldAuthorDao {
     private SessionFactory sessionFactory;
-    private Class<T> clazz;
 
-    public EntityDao(SessionFactory sessionFactory, Class<T> clazz) {
-        this.sessionFactory = sessionFactory;
-        this.clazz = clazz;
-    }
-
-    public Long save(T entity){
+    public Long save(Author author){
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Long id = (Long) session.save(entity);
+        Long id = (Long) session.save(author);
         transaction.commit();
         session.close();
         return id;
     }
 
-    public Optional<T> getById(Long id){
+    public Optional<Author> getById(Long id){
         Session session = sessionFactory.openSession();
-        T entity = session.find(clazz, id);
+        Author author = session.find(Author.class, id);
         session.close();
-        return Optional.ofNullable(entity);
+        return Optional.ofNullable(author);
     }
 
-    public void update(T entity){
+    public void update(Author author){
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.update(entity);
+        session.update(author);
         transaction.commit();
         session.close();
     }
