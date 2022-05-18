@@ -38,6 +38,8 @@ public class App {
         badgeDao.save(badge);
         movieDao.save(movie);
 
+        System.out.println(badge);
+
         sessionFactory.close();
     }
 

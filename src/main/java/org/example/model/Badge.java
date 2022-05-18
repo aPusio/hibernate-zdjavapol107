@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "movie")
 public class Badge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
