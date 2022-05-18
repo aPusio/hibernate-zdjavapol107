@@ -1,7 +1,7 @@
 package org.example;
 
+import org.example.dao.AuthorDao;
 import org.example.dao.BadgeDao;
-import org.example.dao.EntityDao;
 import org.example.dao.MovieDao;
 import org.example.dao.old.OldAuthorDao;
 import org.example.dao.old.OldMovieDao;
@@ -11,7 +11,9 @@ import org.example.model.Movie;
 import org.hibernate.SessionFactory;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class App {
     public static void main(String[] args) {
@@ -26,7 +28,26 @@ public class App {
 
         MovieDao movieDao = new MovieDao(sessionFactory);
         BadgeDao badgeDao = new BadgeDao(sessionFactory);
+        AuthorDao authorDao = new AuthorDao(sessionFactory);
 
+        oneToOneExample(movieDao, badgeDao);
+
+        Author author = new Author("Franek", "Franc", "Kielce");
+        Movie trojkat = new Movie("Trojkat", LocalDate.now());
+        Movie bermudzki = new Movie("Bermudzki", LocalDate.now());
+
+        trojkat.setAuthor(author);
+        bermudzki.setAuthor(author);
+        author.setMovies(Set.of(trojkat, bermudzki));
+
+        authorDao.save(author);
+        movieDao.save(trojkat);
+        movieDao.save(bermudzki);
+
+        sessionFactory.close();
+    }
+
+    private static void oneToOneExample(MovieDao movieDao, BadgeDao badgeDao) {
         Movie movie = new Movie("Trzy swinki", LocalDate.of(1992, 12, 12));
         Badge badge = new Badge();
         badge.setName("SUPER ODZNAKA, SUPER FILM");
@@ -37,10 +58,7 @@ public class App {
 
         badgeDao.save(badge);
         movieDao.save(movie);
-
         System.out.println(badge);
-
-        sessionFactory.close();
     }
 
     private static void deleteExample(OldAuthorDao oldAuthorDao) {
