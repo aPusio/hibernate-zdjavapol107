@@ -18,6 +18,7 @@ public class AuthorDao {
         transaction.commit();
         session.close();
     }
-
+    //getById
+    //update
 
 }

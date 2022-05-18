@@ -13,15 +13,25 @@ import org.hibernate.Transaction;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public class App
-{
-    public static void main( String[] args ) {
+public class App {
+    public static void main(String[] args) {
         SessionFactory sessionFactory = new HibernateFactory().getSessionFactory();
         AuthorDao authorDao = new AuthorDao(sessionFactory);
         MovieDao movieDao = new MovieDao(sessionFactory);
 
         saveAuthorExample(authorDao);
         getByIdWithOptional(movieDao);
+
+        Optional<Movie> byId = movieDao.getById(1L);
+        if (byId.isPresent()) {
+            Movie movie = byId.get();
+            System.out.println("Movie before update:" + movie);
+            movie.setTitle("Updated Title");
+            movieDao.update(movie);
+//            System.out.println("Movie after update: " + movie);
+        }
+        Optional<Movie> updatedMovie = movieDao.getById(1L);
+        updatedMovie.ifPresent(movie -> System.out.println("Movie after update: " + movie));
 
         sessionFactory.close();
     }
@@ -30,7 +40,7 @@ public class App
         //get movie by id
         movieDao.save(new Movie("Swinka Peppa", LocalDate.now()));
         Optional<Movie> optionalMovie = movieDao.getById(99L);
-        if(optionalMovie.isPresent()){
+        if (optionalMovie.isPresent()) {
             Movie movie = optionalMovie.get();
             System.out.println(movie);
         }
