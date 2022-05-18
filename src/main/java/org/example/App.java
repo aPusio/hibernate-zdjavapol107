@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.dao.AuthorDao;
+import org.example.dao.MovieDao;
 import org.example.model.Author;
 import org.example.model.Car;
 import org.example.model.Movie;
@@ -10,33 +12,53 @@ import org.hibernate.Transaction;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class App
 {
     public static void main( String[] args ) {
-//        Car fiatPanda = new Car("Fiat Panda", 2000, 3, 4);
-//        Car build = Car.builder().amountOfDoors(2).build();
-//        Wheel wheel = new Wheel();
-        Movie movie = new Movie();
-        movie.setTitle("Titanic");
-        movie.setReleaseDate(LocalDate.now());
-
-        Author author = new Author();
-        author.setFirstName("Adam");
-        author.setLastName("Adamski");
-        author.setAddress("Gdansk");
-
-        Author all = new Author(666L, "AAA", "BBB", "CCC");
-
         SessionFactory sessionFactory = new HibernateFactory().getSessionFactory();
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        //INSERT INTO MOVIE ...
-        session.save(movie);
-        session.save(author);
-        session.save(all);
-        transaction.commit();
-        session.close();
+        AuthorDao authorDao = new AuthorDao(sessionFactory);
+        MovieDao movieDao = new MovieDao(sessionFactory);
+
+        //save example 1
+        Author tomek = new Author();
+        tomek.setFirstName("Tomek");
+        tomek.setLastName("Tomczyk");
+        tomek.setAddress("Gdansk");
+        authorDao.save(tomek);
+
+        //save example 2
+        authorDao.save(new Author("Maciej", "Maciejewski", "Gdynia"));
+
+        //save example 3
+        authorDao.save(Author.builder()
+                .firstName("Robert")
+                .lastName("Robertowski")
+                .address("Sopot")
+                .build());
+
+        //get movie by id
+        movieDao.save(new Movie("Swinka Peppa", LocalDate.now()));
+        Optional<Movie> optionalMovie = movieDao.getById(99L);
+        if(optionalMovie.isPresent()){
+            Movie movie = optionalMovie.get();
+            System.out.println(movie);
+        }
+
+        //wyjatek bez sprawdzenia isPresent
+//        String title = optionalMovie.get().getTitle();
+
+        //or else czyli wartosc default
+        Movie movie = movieDao.getById(99L)
+                .orElse(new Movie("FILM NIE ZNALEZIONY", LocalDate.MAX));
+
+        optionalMovie.ifPresent(movie2 -> {
+            System.out.println("ZNALEZIONO ! 🤣🤣🤣🤣");
+            System.out.println(movie2);
+        });
+
+
         sessionFactory.close();
     }
 }
