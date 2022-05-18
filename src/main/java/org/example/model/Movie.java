@@ -20,6 +20,8 @@ public class Movie {
     @Column(nullable = false)
     private String title;
     private LocalDate releaseDate;
+    @OneToOne
+    private Badge badge;
 
     public Movie(String title, LocalDate releaseDate) {
         this.title = title;

@@ -1,10 +1,12 @@
 package org.example;
 
+import org.example.dao.BadgeDao;
 import org.example.dao.EntityDao;
 import org.example.dao.MovieDao;
 import org.example.dao.old.OldAuthorDao;
 import org.example.dao.old.OldMovieDao;
 import org.example.model.Author;
+import org.example.model.Badge;
 import org.example.model.Movie;
 import org.hibernate.SessionFactory;
 
@@ -21,6 +23,20 @@ public class App {
         getByIdWithOptional(oldMovieDao);
         updateExample(oldMovieDao);
         deleteExample(oldAuthorDao);
+
+        MovieDao movieDao = new MovieDao(sessionFactory);
+        BadgeDao badgeDao = new BadgeDao(sessionFactory);
+
+        Movie movie = new Movie("Trzy swinki", LocalDate.of(1992, 12, 12));
+        Badge badge = new Badge();
+        badge.setName("SUPER ODZNAKA, SUPER FILM");
+        badge.setValue(3);
+
+        movie.setBadge(badge);
+//        badge.setMovie(movie);
+
+        badgeDao.save(badge);
+        movieDao.save(movie);
 
         sessionFactory.close();
     }
