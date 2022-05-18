@@ -46,6 +46,14 @@ public class MovieDao {
     }
 
     //readAll --
+
+    public void update(Movie movie){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(movie);
+        transaction.commit();
+        session.close();
+    }
     //update
     //delete
 }

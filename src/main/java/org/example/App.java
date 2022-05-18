@@ -11,7 +11,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 public class App
@@ -21,23 +20,13 @@ public class App
         AuthorDao authorDao = new AuthorDao(sessionFactory);
         MovieDao movieDao = new MovieDao(sessionFactory);
 
-        //save example 1
-        Author tomek = new Author();
-        tomek.setFirstName("Tomek");
-        tomek.setLastName("Tomczyk");
-        tomek.setAddress("Gdansk");
-        authorDao.save(tomek);
+        saveAuthorExample(authorDao);
+        getByIdWithOptional(movieDao);
 
-        //save example 2
-        authorDao.save(new Author("Maciej", "Maciejewski", "Gdynia"));
+        sessionFactory.close();
+    }
 
-        //save example 3
-        authorDao.save(Author.builder()
-                .firstName("Robert")
-                .lastName("Robertowski")
-                .address("Sopot")
-                .build());
-
+    private static void getByIdWithOptional(MovieDao movieDao) {
         //get movie by id
         movieDao.save(new Movie("Swinka Peppa", LocalDate.now()));
         Optional<Movie> optionalMovie = movieDao.getById(99L);
@@ -57,8 +46,24 @@ public class App
             System.out.println("ZNALEZIONO ! 🤣🤣🤣🤣");
             System.out.println(movie2);
         });
+    }
 
+    private static void saveAuthorExample(AuthorDao authorDao) {
+        //save example 1
+        Author tomek = new Author();
+        tomek.setFirstName("Tomek");
+        tomek.setLastName("Tomczyk");
+        tomek.setAddress("Gdansk");
+        authorDao.save(tomek);
 
-        sessionFactory.close();
+        //save example 2
+        authorDao.save(new Author("Maciej", "Maciejewski", "Gdynia"));
+
+        //save example 3
+        authorDao.save(Author.builder()
+                .firstName("Robert")
+                .lastName("Robertowski")
+                .address("Sopot")
+                .build());
     }
 }
