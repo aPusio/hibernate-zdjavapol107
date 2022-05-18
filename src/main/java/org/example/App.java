@@ -21,7 +21,19 @@ public class App {
 
         saveAuthorExample(authorDao);
         getByIdWithOptional(movieDao);
+        updateExample(movieDao);
+        deleteExample(authorDao);
 
+        sessionFactory.close();
+    }
+
+    private static void deleteExample(AuthorDao authorDao) {
+        Long id = authorDao.save(new Author("Leszek", "Leszkowski", "Wejcherowo"));
+        authorDao.delete(id);
+        System.out.println("author with id " + id + " was deleted");
+    }
+
+    private static void updateExample(MovieDao movieDao) {
         Optional<Movie> byId = movieDao.getById(1L);
         if (byId.isPresent()) {
             Movie movie = byId.get();
@@ -32,8 +44,6 @@ public class App {
         }
         Optional<Movie> updatedMovie = movieDao.getById(1L);
         updatedMovie.ifPresent(movie -> System.out.println("Movie after update: " + movie));
-
-        sessionFactory.close();
     }
 
     private static void getByIdWithOptional(MovieDao movieDao) {

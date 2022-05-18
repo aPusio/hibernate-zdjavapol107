@@ -12,12 +12,13 @@ import java.util.Optional;
 public class AuthorDao {
     private SessionFactory sessionFactory;
 
-    public void save(Author author){
+    public Long save(Author author){
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.save(author);
+        Long id = (Long) session.save(author);
         transaction.commit();
         session.close();
+        return id;
     }
 
     public Optional<Author> getById(Long id){
@@ -34,7 +35,15 @@ public class AuthorDao {
         transaction.commit();
         session.close();
     }
-    //getById
-    //update
+
+    public void delete(Long id){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        getById(id).ifPresent(session::delete);
+//        Optional<Author> byId = getById(id);
+//        byId.ifPresent(session::delete);
+        transaction.commit();
+        session.close();
+    }
 
 }
