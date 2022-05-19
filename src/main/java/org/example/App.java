@@ -35,7 +35,12 @@ public class App {
 
         oneToOneExample(movieDao, badgeDao);
         oneToManyExample(movieDao, authorDao);
+        manyToManyExample(movieDao, actorDao);
 
+        sessionFactory.close();
+    }
+
+    private static void manyToManyExample(MovieDao movieDao, ActorDao actorDao) {
         Actor jurek = new Actor();
         jurek.setName("Jurek");
         jurek.setYearsOfExperience(4);
@@ -57,8 +62,6 @@ public class App {
         actorDao.save(zenek);
         movieDao.save(jurekIZenek);
         movieDao.save(jurekIZenekOstateczneStarcie);
-
-        sessionFactory.close();
     }
 
     private static void oneToManyExample(MovieDao movieDao, AuthorDao authorDao) {
