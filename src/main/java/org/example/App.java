@@ -36,8 +36,19 @@ public class App {
         oneToOneExample(movieDao, badgeDao);
         oneToManyExample(movieDao, authorDao);
         manyToManyExample(movieDao, actorDao);
+        hqlExamples(badgeDao, actorDao);
 
         sessionFactory.close();
+    }
+
+    private static void hqlExamples(BadgeDao badgeDao, ActorDao actorDao) {
+        System.out.println("ALL BADGES:");
+        badgeDao.getAllBadges().forEach(System.out::println);
+        System.out.println("All Zeneks");
+        actorDao.getByName("Zenek").forEach(System.out::println);
+        System.out.println("UPDATE!");
+        actorDao.updateAllNames("Zenek", "Zenon");
+        actorDao.getByName("Zenon").forEach(System.out::println);
     }
 
     private static void manyToManyExample(MovieDao movieDao, ActorDao actorDao) {

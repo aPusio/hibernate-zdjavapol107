@@ -7,7 +7,7 @@ import org.hibernate.Transaction;
 import java.util.Optional;
 
 public abstract class EntityDao <T>{
-    private SessionFactory sessionFactory;
+    protected SessionFactory sessionFactory;
     private Class<T> clazz;
 
     public EntityDao(SessionFactory sessionFactory, Class<T> clazz) {

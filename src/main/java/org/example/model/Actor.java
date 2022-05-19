@@ -19,6 +19,6 @@ public class Actor {
     private Long id;
     private String name;
     private Integer yearsOfExperience;
-    @ManyToMany(mappedBy = "actors")
+    @ManyToMany(mappedBy = "actors", fetch = FetchType.EAGER)
     private Set<Movie> movies;
 }
