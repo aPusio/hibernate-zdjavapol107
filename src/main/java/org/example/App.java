@@ -1,10 +1,12 @@
 package org.example;
 
+import org.example.dao.ActorDao;
 import org.example.dao.AuthorDao;
 import org.example.dao.BadgeDao;
 import org.example.dao.MovieDao;
 import org.example.dao.old.OldAuthorDao;
 import org.example.dao.old.OldMovieDao;
+import org.example.model.Actor;
 import org.example.model.Author;
 import org.example.model.Badge;
 import org.example.model.Movie;
@@ -29,9 +31,37 @@ public class App {
         MovieDao movieDao = new MovieDao(sessionFactory);
         BadgeDao badgeDao = new BadgeDao(sessionFactory);
         AuthorDao authorDao = new AuthorDao(sessionFactory);
+        ActorDao actorDao = new ActorDao(sessionFactory);
 
         oneToOneExample(movieDao, badgeDao);
+        oneToManyExample(movieDao, authorDao);
 
+        Actor jurek = new Actor();
+        jurek.setName("Jurek");
+        jurek.setYearsOfExperience(4);
+
+        Actor zenek = new Actor();
+        zenek.setName("Zenek");
+        zenek.setYearsOfExperience(2);
+
+        Movie jurekIZenek = new Movie("Jurek i Zenek", LocalDate.now());
+        Movie jurekIZenekOstateczneStarcie = new Movie("Jurek i Zenek Ostateczne Starcie", LocalDate.now());
+
+        //set w jurku i zenku jest nadmiarowy
+//        jurek.setMovies(Set.of(jurekIZenek, jurekIZenekOstateczneStarcie));
+//        zenek.setMovies(Set.of(jurekIZenek, jurekIZenekOstateczneStarcie));
+        jurekIZenek.setActors(Set.of(jurek, zenek));
+        jurekIZenekOstateczneStarcie.setActors(Set.of(jurek, zenek));
+
+        actorDao.save(jurek);
+        actorDao.save(zenek);
+        movieDao.save(jurekIZenek);
+        movieDao.save(jurekIZenekOstateczneStarcie);
+
+        sessionFactory.close();
+    }
+
+    private static void oneToManyExample(MovieDao movieDao, AuthorDao authorDao) {
         Author author = new Author("Franek", "Franc", "Kielce");
         Movie trojkat = new Movie("Trojkat", LocalDate.now());
         Movie bermudzki = new Movie("Bermudzki", LocalDate.now());
@@ -43,8 +73,6 @@ public class App {
         authorDao.save(author);
         movieDao.save(trojkat);
         movieDao.save(bermudzki);
-
-        sessionFactory.close();
     }
 
     private static void oneToOneExample(MovieDao movieDao, BadgeDao badgeDao) {
