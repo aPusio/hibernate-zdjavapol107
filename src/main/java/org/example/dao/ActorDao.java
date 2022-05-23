@@ -27,9 +27,10 @@ public class ActorDao extends EntityDao<Actor> {
         resultList = session.createQuery("From Actor a Where a.name = :nameParameter", Actor.class)
                 .setParameter("nameParameter", name)
                 .getResultList();
-//        for (Actor actor : resultList) {
-//            Hibernate.initialize(actor.getMovies());
-//        }
+
+        for (Actor actor : resultList) {
+            Hibernate.initialize(actor.getMovies());
+        }
 
         session.close();
         return resultList;

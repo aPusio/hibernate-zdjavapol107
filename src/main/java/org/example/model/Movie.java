@@ -25,7 +25,7 @@ public class Movie {
     private Badge badge;
     @ManyToOne
     private Author author;
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.PERSIST } )
     private Set<Actor> actors;
 
     public Movie(String title, LocalDate releaseDate) {

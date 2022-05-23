@@ -38,6 +38,11 @@ public class App {
         manyToManyExample(movieDao, actorDao);
         hqlExamples(badgeDao, actorDao);
 
+        Optional<Movie> byId = movieDao.getById(2L);
+        Movie movie = byId.get();
+        movie.getActors();
+        movie.getBadge();
+        movie.getTitle();
         sessionFactory.close();
     }
 
@@ -45,10 +50,10 @@ public class App {
         System.out.println("ALL BADGES:");
         badgeDao.getAllBadges().forEach(System.out::println);
         System.out.println("All Zeneks");
-        actorDao.getByName("Zenek").forEach(System.out::println);
+        actorDao.getByName("Zenon").forEach(System.out::println);
         System.out.println("UPDATE!");
         actorDao.updateAllNames("Zenek", "Zenon");
-        actorDao.getByName("Zenon").forEach(System.out::println);
+        actorDao.getByName("Zenek").forEach(System.out::println);
     }
 
     private static void manyToManyExample(MovieDao movieDao, ActorDao actorDao) {
@@ -69,8 +74,8 @@ public class App {
         jurekIZenek.setActors(Set.of(jurek, zenek));
         jurekIZenekOstateczneStarcie.setActors(Set.of(jurek, zenek));
 
-        actorDao.save(jurek);
-        actorDao.save(zenek);
+//        actorDao.save(jurek);
+//        actorDao.save(zenek);
         movieDao.save(jurekIZenek);
         movieDao.save(jurekIZenekOstateczneStarcie);
     }
